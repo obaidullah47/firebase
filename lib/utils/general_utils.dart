@@ -17,7 +17,7 @@ class GeneralUtils {
     Flushbar(
       message: message,
       title: "Notification",
-      duration: Duration(seconds: 1),
+      duration: Duration(seconds: 3),
       safeArea: true,
       borderRadius: BorderRadius.circular(30),
       backgroundColor: Colors.deepPurple,

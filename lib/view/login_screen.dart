@@ -1,12 +1,13 @@
 import 'package:firebase/utils/general_utils.dart';
 import 'package:firebase/view/home_screen.dart';
+import 'package:firebase/view/phone_number_screen.dart';
 import 'package:firebase/view/signup_screen.dart';
 import 'package:firebase/widgets/round_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class LoginScreen extends StatefulWidget {
-  static const String id = 'login_screen';
+  static const String id = 'loginScreen';
   const LoginScreen({super.key});
 
   @override
@@ -36,11 +37,12 @@ class _LoginScreenState extends State<LoginScreen> {
           });
           GeneralUtils.flushbar(value.user!.email.toString(), context);
           Future.delayed(Duration(seconds: 2));
-          Navigator.push(
+          Navigator.pushNamedAndRemoveUntil(
             context,
-            MaterialPageRoute(builder: (context) => HomeScreen()),
+            HomeScreen.id,
+            (route) => false,
           );
-          GeneralUtils.flushbar("Login successfulllyyyy", context);
+          GeneralUtils.fluttertoast("Login successfulllyyyy");
         })
         .onError((error, stackTrace) {
           GeneralUtils.flushbar(error.toString(), context);
@@ -167,6 +169,34 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                   ],
+                ),
+                SizedBox(height: 40),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 40),
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => PhoneNumberScreen(),
+                        ),
+                      );
+                    },
+                    child: Container(
+                      height: 50,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(30),
+                        border: Border.all(color: Colors.deepPurple, width: 2),
+                      ),
+                      child: Center(
+                        child: Text(
+                          "Login with Phone number",
+                          style: TextStyle(fontSize: 16),
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
               ],
             ),

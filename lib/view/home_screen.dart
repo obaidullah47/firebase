@@ -24,10 +24,12 @@ class _HomeScreenState extends State<HomeScreen> {
               _auth
                   .signOut()
                   .then((value) {
-                    Navigator.push(
+                    Navigator.pushNamedAndRemoveUntil(
                       context,
-                      MaterialPageRoute(builder: (context) => LoginScreen()),
+                      LoginScreen.id,
+                      (route) => false,
                     );
+
                     GeneralUtils.flushbar("sign out", context);
                   })
                   .onError((error, stackTrace) {
