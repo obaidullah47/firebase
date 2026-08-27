@@ -1,7 +1,12 @@
+import 'package:firebase/utils/general_utils.dart';
+import 'package:firebase/view/home_screen.dart';
+import 'package:firebase/view/signup_screen.dart';
 import 'package:firebase/widgets/round_button.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class LoginScreen extends StatefulWidget {
+  static const String id = 'login_screen';
   const LoginScreen({super.key});
 
   @override
@@ -11,113 +16,159 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailcontroller = TextEditingController();
   final TextEditingController _passwordcontroller = TextEditingController();
-  final ValueNotifier<bool> _eyenotifire = ValueNotifier<bool>(true);
+  final ValueNotifier<bool> _eyenotifier = ValueNotifier<bool>(true);
   final _formkey = GlobalKey<FormState>();
+  final _auth = FirebaseAuth.instance;
+  bool loading = false;
+
+  void login() {
+    setState(() {
+      loading = true;
+    });
+    _auth
+        .signInWithEmailAndPassword(
+          email: _emailcontroller.text.toString(),
+          password: _passwordcontroller.text.toString(),
+        )
+        .then((value) {
+          setState(() {
+            loading = false;
+          });
+          GeneralUtils.flushbar(value.user!.email.toString(), context);
+          Future.delayed(Duration(seconds: 2));
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => HomeScreen()),
+          );
+          GeneralUtils.flushbar("Login successfulllyyyy", context);
+        })
+        .onError((error, stackTrace) {
+          GeneralUtils.flushbar(error.toString(), context);
+          setState(() {
+            loading = false;
+          });
+        });
+  }
+
   @override
   void dispose() {
     _emailcontroller.dispose();
     _passwordcontroller.dispose();
-    _eyenotifire.dispose();
+    _eyenotifier.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.purple,
-        title: Text("Login", style: TextStyle(color: Colors.white)),
-        centerTitle: true,
-      ),
+      appBar: AppBar(title: const Text("Login")),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
-
         children: [
+          const SizedBox(height: 50),
           Form(
             key: _formkey,
             child: Column(
               children: [
                 Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 20,
-                    vertical: 20,
-                  ),
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: TextFormField(
                     controller: _emailcontroller,
-
                     decoration: InputDecoration(
-                      helperText: "abc@gmail.com",
-                      hint: Text("Enter your email"),
+                      hintText: "Enter your Email",
                       labelText: "Email",
-                      prefixIcon: Icon(Icons.email_outlined),
+                      helperText: "abc@gmail.com",
+                      prefixIcon: const Icon(Icons.email_outlined),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(30),
                       ),
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return "Enter email";
+                        return "enter your email";
                       }
-                      if (value!.contains("@")) {
-                        return "Enter the email that contain @";
+                      if (!value.contains('@')) {
+                        return "email must contain @";
                       }
                       return null;
                     },
                   ),
                 ),
+                const SizedBox(height: 20),
                 ValueListenableBuilder(
-                  valueListenable: _eyenotifire,
+                  valueListenable: _eyenotifier,
                   builder: (context, value, child) {
                     return Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 20,
-                        vertical: 20,
-                      ),
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
                       child: TextFormField(
-                        obscureText: _eyenotifire.value,
+                        obscureText: _eyenotifier.value,
                         controller: _passwordcontroller,
                         decoration: InputDecoration(
-                          hint: Text("Enter your password"),
-                          labelText: "Password",
-                          prefixIcon: Icon(Icons.lock_open),
-
-                          suffixIcon: InkWell(
-                            onTap: () {
-                              _eyenotifire.value = !_eyenotifire.value;
-                            },
-                            child: Icon(
-                              _eyenotifire.value
-                                  ? Icons.remove_red_eye
-                                  : Icons.visibility_off,
-                            ),
-                          ),
-
+                          hintText: "Enter your password",
+                          labelText: 'Password',
+                          prefixIcon: const Icon(Icons.lock_open),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(30),
                           ),
+                          suffixIcon: InkWell(
+                            onTap: () {
+                              _eyenotifier.value = !_eyenotifier.value;
+                            },
+                            child: Icon(
+                              _eyenotifier.value
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
+                            ),
+                          ),
                         ),
                         validator: (value) {
-                          if (value!.isEmpty) {
-                            return "Enter password";
+                          if (value == null || value.isEmpty) {
+                            return "enter your remembered password";
                           }
-
+                          if (!value.contains(RegExp(r'[0-9]'))) {
+                            return "password must contain any number 0-9";
+                          }
                           return null;
                         },
                       ),
                     );
                   },
                 ),
-              ],
-            ),
-          ),
+                const SizedBox(height: 30),
+                RoundButton(
+                  title: "Login",
+                  loading: loading,
+                  onPress: () {
+                    if (_formkey.currentState!.validate()) {
+                      login();
 
-          SizedBox(height: 40),
-          Center(
-            child: RoundButton(
-              title: "Login",
-              onPress: () {
-                if (_formkey.currentState!.validate()) ;
-              },
+                      // Login logic here
+                    }
+                  },
+                ),
+                const SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text("Didn't had an account"),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (BuildContext context) =>
+                                const SignupScreen(),
+                          ),
+                        );
+                      },
+                      child: const Text(
+                        "Signup",
+                        style: TextStyle(fontSize: 20),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
           ),
         ],

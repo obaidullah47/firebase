@@ -2,6 +2,7 @@ import 'package:firebase/services/splash_services.dart';
 import 'package:flutter/material.dart';
 
 class SplashScreen extends StatefulWidget {
+  static const String id = 'splash_screen';
   const SplashScreen({super.key});
 
   @override

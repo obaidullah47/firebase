@@ -1,7 +1,14 @@
+import 'package:firebase/view/home_screen.dart';
+import 'package:firebase/view/login_screen.dart';
+import 'package:firebase/view/signup_screen.dart';
 import 'package:firebase/view/splash_screen.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+
   runApp(firebaseApp());
 }
 
@@ -10,8 +17,20 @@ class firebaseApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: SplashScreen(),
-      theme: ThemeData(appBarTheme: AppBarThemeData(color: Colors.purple)),
+      initialRoute: SplashScreen.id,
+      routes: {
+        SplashScreen.id: (context) => SplashScreen(),
+        LoginScreen.id: (context) => LoginScreen(),
+        SignupScreen.id: (context) => SignupScreen(),
+        HomeScreen.id: (context) => HomeScreen(),
+      },
+      theme: ThemeData(
+        appBarTheme: AppBarThemeData(
+          backgroundColor: Colors.purple,
+          titleTextStyle: TextStyle(color: Colors.white, fontSize: 20),
+          centerTitle: true,
+        ),
+      ),
     );
   }
 }
