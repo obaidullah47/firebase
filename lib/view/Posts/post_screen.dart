@@ -47,7 +47,10 @@ class _PostScreenState extends State<PostScreen> {
                 });
                 databaseRef
                     .child(DateTime.now().microsecondsSinceEpoch.toString())
-                    .set({'Thoughts :': _postcontroller.text.toString()})
+                    .set({
+                      'id': DateTime.now().microsecondsSinceEpoch.toString(),
+                      'Thoughts :': _postcontroller.text.toString(),
+                    })
                     .then((value) {
                       GeneralUtils.flushbar("Post Added", context);
                       setState(() {
