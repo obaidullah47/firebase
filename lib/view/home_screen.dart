@@ -1,4 +1,5 @@
 import 'package:firebase/utils/general_utils.dart';
+import 'package:firebase/view/Posts/post_screen.dart';
 import 'package:firebase/view/login_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
@@ -45,6 +46,16 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
 
         title: Text("HomeScreen"),
+      ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.purple,
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => PostScreen()),
+          );
+        },
+        child: Icon(Icons.add, color: Colors.white),
       ),
     );
   }

@@ -51,6 +51,7 @@ class _PhoneNumberScreenState extends State<PhoneNumberScreen> {
                 loading = true;
               });
               _auth.verifyPhoneNumber(
+                phoneNumber: phonenumbercontroller.text.toString(),
                 verificationCompleted: (_) {
                   setState(() {
                     loading = false;

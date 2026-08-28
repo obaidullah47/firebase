@@ -43,6 +43,7 @@ dependencies:
   fluttertoast: ^10.0.0
   another_flushbar: ^2.2.4
   shared_preferences: ^2.5.5
+  firebase_database: ^12.5.0
 
 dev_dependencies:
   flutter_test:
