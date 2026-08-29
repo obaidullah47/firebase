@@ -45,10 +45,11 @@ class _PostScreenState extends State<PostScreen> {
                 setState(() {
                   loading = true;
                 });
+                String time = DateTime.now().microsecondsSinceEpoch.toString();
                 databaseRef
-                    .child(DateTime.now().microsecondsSinceEpoch.toString())
+                    .child(time)
                     .set({
-                      'id': DateTime.now().microsecondsSinceEpoch.toString(),
+                      'id': time,
                       'Thoughts :': _postcontroller.text.toString(),
                     })
                     .then((value) {
