@@ -6,6 +6,7 @@ import 'add_post_firestore.dart';
 
 class FirestoreHomescreen extends StatefulWidget {
   static const String id = "firestorehomescreen";
+
   const FirestoreHomescreen({super.key});
 
   @override
@@ -16,6 +17,11 @@ class _FirestoreHomescreenState extends State<FirestoreHomescreen> {
   bool loading = false;
   final firestore = FirebaseFirestore.instance.collection('posts').snapshots();
   final _seacrchcontroller = TextEditingController();
+  final _editcontroller = TextEditingController();
+  CollectionReference _reference = FirebaseFirestore.instance.collection(
+    "posts",
+  );
+
   @override
   void dispose() {
     _seacrchcontroller.dispose();
@@ -65,12 +71,42 @@ class _FirestoreHomescreenState extends State<FirestoreHomescreen> {
                     itemBuilder: (context, index) {
                       final doc = snapshot.data!.docs[index];
                       final String dataText = doc['data'].toString();
+                      final id = doc['id'].toString();
 
                       // Change: If search bar is empty, show all items
                       if (_seacrchcontroller.text.isEmpty) {
                         return ListTile(
                           key: ValueKey(doc.id),
                           title: Text(doc['data'].toString()),
+                          trailing: PopupMenuButton(
+                            shape: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                            child: Icon(Icons.more_vert),
+                            itemBuilder: (context) => [
+                              PopupMenuItem(
+                                onTap: () {
+                                  showdialoge(dataText, id);
+                                },
+                                value: 1,
+                                child: ListTile(
+                                  leading: Icon(Icons.edit),
+                                  title: Text("Edit"),
+                                ),
+                              ),
+                              PopupMenuItem(
+                                onTap: () {
+                                  _reference.doc(id).delete();
+                                },
+                                value: 2,
+
+                                child: ListTile(
+                                  leading: Icon(Icons.delete),
+                                  title: Text("Delete"),
+                                ),
+                              ),
+                            ],
+                          ),
                         );
                       }
                       // Change: Added filtering logic to check if the document data contains the search text
@@ -103,6 +139,47 @@ class _FirestoreHomescreenState extends State<FirestoreHomescreen> {
         },
         child: Icon(Icons.add, color: Colors.white),
       ),
+    );
+  }
+
+  Future<void> showdialoge(String msg, String id) async {
+    _editcontroller.text = msg;
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Update"),
+          content: Container(
+            child: TextField(
+              controller: _editcontroller,
+              decoration: InputDecoration(border: OutlineInputBorder()),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+                _reference
+                    .doc(id)
+                    .update({'data': _editcontroller.text.toString()})
+                    .then((value) {
+                      GeneralUtils.fluttertoast("updated");
+                    })
+                    .onError((error, stackTrace) {
+                      GeneralUtils.fluttertoast(error.toString());
+                    });
+              },
+              child: Text("Update"),
+            ),
+          ],
+        );
+      },
     );
   }
 }
