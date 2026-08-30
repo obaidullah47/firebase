@@ -27,6 +27,7 @@ class firebaseApp extends StatelessWidget {
       theme: ThemeData(
         appBarTheme: AppBarThemeData(
           backgroundColor: Colors.purple,
+          iconTheme: IconThemeData(color: Colors.white),
           titleTextStyle: TextStyle(color: Colors.white, fontSize: 20),
           centerTitle: true,
         ),

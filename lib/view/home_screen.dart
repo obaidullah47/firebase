@@ -89,6 +89,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     itemBuilder: (context, index) {
                       final title = list[index]['Thoughts :'].toString();
                       final id = list[index]['id'].toString();
+                      //searching process
                       if (searchcontroller.text.isEmpty) {
                         return ListTile(
                           key: ValueKey(list[index]['id']),
