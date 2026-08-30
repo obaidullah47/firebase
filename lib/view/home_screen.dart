@@ -118,6 +118,20 @@ class _HomeScreenState extends State<HomeScreen> {
                               PopupMenuItem(
                                 value: 2,
                                 child: ListTile(
+                                  onTap: () {
+                                    Navigator.pop(context);
+                                    ref
+                                        .child(id)
+                                        .remove()
+                                        .then((value) {
+                                          GeneralUtils.fluttertoast("Deleted");
+                                        })
+                                        .onError((error, stackTrace) {
+                                          GeneralUtils.fluttertoast(
+                                            error.toString(),
+                                          );
+                                        });
+                                  },
                                   leading: Icon(Icons.delete_forever),
                                   title: Text("Delete"),
                                 ),
@@ -202,7 +216,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 Navigator.pop(context);
                 ref
                     .child(id)
-                    .update(({'title': editcontroller.text.toLowerCase()}))
+                    .update(({'Thoughts :': editcontroller.text.toLowerCase()}))
                     .then((value) {
                       GeneralUtils.fluttertoast("Updated");
                     })

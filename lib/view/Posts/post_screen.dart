@@ -53,7 +53,7 @@ class _PostScreenState extends State<PostScreen> {
                       'Thoughts :': _postcontroller.text.toString(),
                     })
                     .then((value) {
-                      GeneralUtils.flushbar("Post Added", context);
+                      GeneralUtils.fluttertoast("Post added");
                       setState(() {
                         loading = false;
                       });
