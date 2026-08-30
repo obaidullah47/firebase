@@ -44,6 +44,7 @@ dependencies:
   another_flushbar: ^2.2.4
   shared_preferences: ^2.5.5
   firebase_database: ^12.5.0
+  image_picker: ^1.2.3
 
 dev_dependencies:
   flutter_test:
