@@ -1,10 +1,9 @@
 import 'dart:async';
 
+import 'package:firebase/firestore/uploadImage/upload_image_screen.dart';
 import 'package:firebase/view/login_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
-import '../firestore/firestore_homescreen.dart';
 
 class SplashServices {
   void islogin(BuildContext context) {
@@ -16,7 +15,7 @@ class SplashServices {
         () => Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (BuildContext context) => FirestoreHomescreen(),
+            builder: (BuildContext context) => UploadImageScreen(),
           ),
         ),
       );
