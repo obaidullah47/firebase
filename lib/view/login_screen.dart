@@ -1,4 +1,5 @@
 import 'package:firebase/utils/general_utils.dart';
+import 'package:firebase/view/forgot_password_screen.dart';
 import 'package:firebase/view/home_screen.dart';
 import 'package:firebase/view/phone_number_screen.dart';
 import 'package:firebase/view/signup_screen.dart';
@@ -36,13 +37,14 @@ class _LoginScreenState extends State<LoginScreen> {
             loading = false;
           });
           GeneralUtils.flushbar(value.user!.email.toString(), context);
-          Future.delayed(Duration(seconds: 2));
+
+          // Using pushNamedAndRemoveUntil to clear stack
           Navigator.pushNamedAndRemoveUntil(
             context,
             HomeScreen.id,
             (route) => false,
           );
-          GeneralUtils.fluttertoast("Login successfulllyyyy");
+          GeneralUtils.fluttertoast("Login successfully");
         })
         .onError((error, stackTrace) {
           GeneralUtils.flushbar(error.toString(), context);
@@ -66,6 +68,7 @@ class _LoginScreenState extends State<LoginScreen> {
       appBar: AppBar(title: const Text("Login")),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           const SizedBox(height: 50),
           Form(
@@ -136,15 +139,30 @@ class _LoginScreenState extends State<LoginScreen> {
                     );
                   },
                 ),
-                const SizedBox(height: 30),
+                Align(
+                  alignment: Alignment.bottomRight,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (BuildContext context) =>
+                                const ForgotPasswordScreen(),
+                          ),
+                        );
+                      },
+                      child: const Text("Forgot Password"),
+                    ),
+                  ),
+                ),
                 RoundButton(
                   title: "Login",
                   loading: loading,
                   onPress: () {
                     if (_formkey.currentState!.validate()) {
                       login();
-
-                      // Login logic here
                     }
                   },
                 ),
@@ -152,7 +170,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text("Didn't had an account"),
+                    const Text("Didn't have an account"),
                     TextButton(
                       onPressed: () {
                         Navigator.pushReplacement(
@@ -170,7 +188,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ],
                 ),
-                SizedBox(height: 40),
+                const SizedBox(height: 20),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 40),
                   child: InkWell(
@@ -178,7 +196,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => PhoneNumberScreen(),
+                          builder: (context) => const PhoneNumberScreen(),
                         ),
                       );
                     },
@@ -189,7 +207,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         borderRadius: BorderRadius.circular(30),
                         border: Border.all(color: Colors.deepPurple, width: 2),
                       ),
-                      child: Center(
+                      child: const Center(
                         child: Text(
                           "Login with Phone number",
                           style: TextStyle(fontSize: 16),

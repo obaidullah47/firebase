@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:firebase/utils/general_utils.dart';
 import 'package:firebase/widgets/round_button.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -14,6 +16,12 @@ class UploadImageScreen extends StatefulWidget {
 }
 
 class _UploadImageScreenState extends State<UploadImageScreen> {
+  bool loading = false;
+  final firebase_storage.FirebaseStorage _storage =
+      firebase_storage.FirebaseStorage.instance;
+  final DatabaseReference _databaseReference = FirebaseDatabase.instance.ref(
+    'posts',
+  );
   File? _image;
   final pickedfile = ImagePicker();
   Future getimage() async {
@@ -57,7 +65,52 @@ class _UploadImageScreenState extends State<UploadImageScreen> {
             ),
           ),
           SizedBox(height: 40),
-          RoundButton(title: "Upload", onPress: () {}),
+          RoundButton(
+            loading: loading,
+            title: "Upload",
+
+            onPress: () async {
+              setState(() {
+                loading = true;
+              });
+              final timeID = DateTime.now().microsecondsSinceEpoch.toString();
+              firebase_storage.Reference ref = firebase_storage
+                  .FirebaseStorage
+                  .instance
+                  .ref('/images/' + '$timeID');
+              firebase_storage.UploadTask uploadTask = ref.putFile(
+                _image!.absolute,
+              );
+              Future.value(uploadTask)
+                  .then((value) async {
+                    setState(() {
+                      loading = true;
+                    });
+                    var newURL = await ref.getDownloadURL();
+                    _databaseReference
+                        .child('1')
+                        .set({'id': timeID, 'data': newURL.toString()})
+                        .then((value) {
+                          setState(() {
+                            loading = false;
+                          });
+                          GeneralUtils.fluttertoast("Upload done");
+                        })
+                        .onError((error, stackTrace) {
+                          setState(() {
+                            loading = false;
+                          });
+                          GeneralUtils.fluttertoast(error.toString());
+                        });
+                  })
+                  .onError((error, stackTrace) {
+                    setState(() {
+                      loading = false;
+                    });
+                    GeneralUtils.fluttertoast(error.toString());
+                  });
+            },
+          ),
         ],
       ),
     );
