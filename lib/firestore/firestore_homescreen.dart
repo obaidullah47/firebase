@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase/utils/general_utils.dart';
+import 'package:firebase/view/login_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'add_post_firestore.dart';
@@ -21,6 +23,7 @@ class _FirestoreHomescreenState extends State<FirestoreHomescreen> {
   CollectionReference _reference = FirebaseFirestore.instance.collection(
     "posts",
   );
+  final _auth = FirebaseAuth.instance;
 
   @override
   void dispose() {
@@ -33,7 +36,22 @@ class _FirestoreHomescreenState extends State<FirestoreHomescreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text("FireStore__HomeScreen"),
-        actions: [IconButton(onPressed: () {}, icon: Icon(Icons.logout))],
+        actions: [
+          IconButton(
+            onPressed: () {
+              _auth
+                  .signOut()
+                  .then((value) {
+                    GeneralUtils.fluttertoast("Sign out");
+                    Navigator.pushReplacementNamed(context, LoginScreen.id);
+                  })
+                  .onError((error, stackTrace) {
+                    GeneralUtils.fluttertoast(error.toString());
+                  });
+            },
+            icon: Icon(Icons.logout),
+          ),
+        ],
       ),
       body: Column(
         children: [

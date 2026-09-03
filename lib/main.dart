@@ -1,3 +1,5 @@
+import 'package:firebase/firestore/firestore_homescreen.dart';
+import 'package:firebase/view/continue_withgoogle_screen.dart';
 import 'package:firebase/view/home_screen.dart';
 import 'package:firebase/view/login_screen.dart';
 import 'package:firebase/view/signup_screen.dart';
@@ -23,6 +25,8 @@ class firebaseApp extends StatelessWidget {
         LoginScreen.id: (context) => LoginScreen(),
         SignupScreen.id: (context) => SignupScreen(),
         HomeScreen.id: (context) => HomeScreen(),
+        ContinueWithgoogleScreen.id: (context) => ContinueWithgoogleScreen(),
+        FirestoreHomescreen.id: (context) => FirestoreHomescreen(),
       },
       theme: ThemeData(
         appBarTheme: AppBarThemeData(
