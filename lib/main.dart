@@ -1,4 +1,5 @@
 import 'package:firebase/firestore/firestore_homescreen.dart';
+import 'package:firebase/services/notification_services.dart';
 import 'package:firebase/view/continue_withgoogle_screen.dart';
 import 'package:firebase/view/home_screen.dart';
 import 'package:firebase/view/login_screen.dart';
@@ -9,6 +10,7 @@ import 'package:flutter/material.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await NotificationServices().initializeLocalNotifications();
   await Firebase.initializeApp();
 
   runApp(firebaseApp());

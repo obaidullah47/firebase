@@ -1,3 +1,4 @@
+import 'package:firebase/services/notification_services.dart';
 import 'package:firebase/utils/general_utils.dart';
 import 'package:firebase/view/forgot_password_screen.dart';
 import 'package:firebase/view/home_screen.dart';
@@ -18,6 +19,21 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  NotificationServices notificationServices = NotificationServices();
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    notificationServices.requestnotificaionservices();
+    notificationServices.firebasenotification();
+
+    notificationServices.getdeviceToken().then((value) {
+      print("Device TOken");
+      print(value);
+      notificationServices.isTokenRefresh();
+    });
+  }
+
   final TextEditingController _emailcontroller = TextEditingController();
   final TextEditingController _passwordcontroller = TextEditingController();
   final ValueNotifier<bool> _eyenotifier = ValueNotifier<bool>(true);

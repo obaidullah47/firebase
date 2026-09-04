@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase/services/notification_services.dart';
 import 'package:firebase/utils/general_utils.dart';
 import 'package:firebase/view/login_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -16,6 +17,13 @@ class FirestoreHomescreen extends StatefulWidget {
 }
 
 class _FirestoreHomescreenState extends State<FirestoreHomescreen> {
+  NotificationServices notificationServices = NotificationServices();
+  @override
+  void initState() {
+    super.initState();
+    notificationServices.requestnotificaionservices();
+  }
+
   bool loading = false;
   final firestore = FirebaseFirestore.instance.collection('posts').snapshots();
   final _seacrchcontroller = TextEditingController();
