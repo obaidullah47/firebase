@@ -10,28 +10,35 @@ import 'package:flutter/material.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await NotificationServices().initializeLocalNotifications();
+
+  // Initialize Firebase first
   await Firebase.initializeApp();
 
-  runApp(firebaseApp());
+  // Initialize notifications second
+  await NotificationServices().initializeLocalNotifications();
+
+  runApp(const FirebaseApp());
 }
 
-class firebaseApp extends StatelessWidget {
-  const firebaseApp({super.key});
+class FirebaseApp extends StatelessWidget {
+  const FirebaseApp({super.key});
+
+  @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       initialRoute: SplashScreen.id,
       routes: {
-        SplashScreen.id: (context) => SplashScreen(),
-        LoginScreen.id: (context) => LoginScreen(),
-        SignupScreen.id: (context) => SignupScreen(),
-        HomeScreen.id: (context) => HomeScreen(),
-        ContinueWithgoogleScreen.id: (context) => ContinueWithgoogleScreen(),
-        FirestoreHomescreen.id: (context) => FirestoreHomescreen(),
+        SplashScreen.id: (context) => const SplashScreen(),
+        LoginScreen.id: (context) => const LoginScreen(),
+        SignupScreen.id: (context) => const SignupScreen(),
+        HomeScreen.id: (context) => const HomeScreen(),
+        ContinueWithgoogleScreen.id: (context) =>
+            const ContinueWithgoogleScreen(),
+        FirestoreHomescreen.id: (context) => const FirestoreHomescreen(),
       },
       theme: ThemeData(
-        appBarTheme: AppBarThemeData(
+        appBarTheme: const AppBarTheme(
           backgroundColor: Colors.purple,
           iconTheme: IconThemeData(color: Colors.white),
           titleTextStyle: TextStyle(color: Colors.white, fontSize: 20),

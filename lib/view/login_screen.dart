@@ -19,18 +19,29 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  NotificationServices notificationServices = NotificationServices();
+  final NotificationServices _notificationServices = NotificationServices();
+
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    notificationServices.requestnotificaionservices();
-    notificationServices.firebasenotification();
+    _setupNotifications();
+  }
 
-    notificationServices.getdeviceToken().then((value) {
-      print("Device TOken");
-      print(value);
-      notificationServices.isTokenRefresh();
+  void _setupNotifications() {
+    // Request notification permissions
+    _notificationServices.requestnotificaionservices();
+
+    // Listen for foreground notifications
+    _notificationServices.firebasenotification();
+
+    // Listen for token refresh
+    _notificationServices.isTokenRefresh();
+
+    // Get and print device token
+    _notificationServices.getdeviceToken().then((value) {
+      print("========================================");
+      print("Device Token: $value");
+      print("========================================");
     });
   }
 
@@ -84,7 +95,6 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text("Login")),
-      // Fix: Wrap the entire body in SingleChildScrollView to prevent overflow when keyboard opens
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 20),
@@ -154,7 +164,6 @@ class _LoginScreenState extends State<LoginScreen> {
                                 if (value == null || value.isEmpty) {
                                   return "enter your remembered password";
                                 }
-
                                 return null;
                               },
                             ),

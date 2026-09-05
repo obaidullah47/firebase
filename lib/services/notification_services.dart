@@ -45,8 +45,8 @@ class NotificationServices {
 
     await _flutterLocalNotificationsPlugin.initialize(
       settings: initializationSettings,
-      onDidReceiveNotificationResponse: (payload) {
-        print("Notification tapped: ${payload.payload}");
+      onDidReceiveNotificationResponse: (response) {
+        print("Notification tapped: ${response.payload}");
       },
     );
   }
@@ -97,10 +97,10 @@ class NotificationServices {
       iOS: darwinNotificationDetails,
     );
 
-    int uniqueid = Random().nextInt(100000);
+    int notifyId = Random().nextInt(100000);
 
     await _flutterLocalNotificationsPlugin.show(
-      id: uniqueid,
+      id: notifyId,
       title: message.notification?.title ?? "New Message",
       body: message.notification?.body ?? "You have a new message",
       notificationDetails: notificationDetails,
