@@ -32,7 +32,7 @@ class NotificationServices {
 
   Future<void> initializeLocalNotifications() async {
     const AndroidInitializationSettings androidInitializationSettings =
-        AndroidInitializationSettings('ic_launcher');
+        AndroidInitializationSettings('@mipmap/ic_launcher');
 
     const DarwinInitializationSettings iosInitializationSettings =
         DarwinInitializationSettings();
@@ -43,10 +43,13 @@ class NotificationServices {
           iOS: iosInitializationSettings,
         );
 
+    // FIXED: Added 'settings:' named parameter as required by your library version
     await _flutterLocalNotificationsPlugin.initialize(
       settings: initializationSettings,
       onDidReceiveNotificationResponse: (response) {
-        print("Notification tapped: ${response.payload}");
+        if (kDebugMode) {
+          print("Notification tapped: ${response.payload}");
+        }
       },
     );
   }
@@ -69,17 +72,17 @@ class NotificationServices {
   }
 
   Future<void> shownotification(RemoteMessage message) async {
-    const AndroidNotificationChannel androidNotificationChannel =
-        AndroidNotificationChannel(
-          'high_importance_channel',
-          'High Importance Notifications',
-          importance: Importance.max,
-        );
+    const AndroidNotificationChannel channel = AndroidNotificationChannel(
+      'high_importance_channel',
+      'High Importance Notifications',
+      importance: Importance.max,
+    );
 
-    const AndroidNotificationDetails androidNotificationDetails =
+    AndroidNotificationDetails androidNotificationDetails =
         AndroidNotificationDetails(
-          'high_importance_channel',
-          'High Importance Notifications',
+          channel.id,
+          channel.name,
+          channelDescription: "This is your channel description",
           importance: Importance.high,
           priority: Priority.high,
           ticker: 'ticker',
@@ -92,7 +95,7 @@ class NotificationServices {
           presentSound: true,
         );
 
-    const NotificationDetails notificationDetails = NotificationDetails(
+    NotificationDetails notificationDetails = NotificationDetails(
       android: androidNotificationDetails,
       iOS: darwinNotificationDetails,
     );

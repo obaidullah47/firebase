@@ -1,5 +1,5 @@
-import 'package:firebase/firestore/firestore_homescreen.dart';
 import 'package:firebase/utils/general_utils.dart';
+import 'package:firebase/view/home_screen.dart';
 import 'package:firebase/widgets/round_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -36,7 +36,7 @@ class _ContinueWithgoogleScreenState extends State<ContinueWithgoogleScreen> {
       GeneralUtils.fluttertoast(
         'UserName:${_usercredential.user!.displayName}\nEmail:${_usercredential.user!.email}',
       );
-      Navigator.pushReplacementNamed(context, FirestoreHomescreen.id);
+      Navigator.pushReplacementNamed(context, HomeScreen.id);
     } catch (e) {
       GeneralUtils.flushbar(e.toString(), context);
     }

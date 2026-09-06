@@ -22,6 +22,7 @@ class _FirestoreHomescreenState extends State<FirestoreHomescreen> {
   void initState() {
     super.initState();
     notificationServices.requestnotificaionservices();
+    notificationServices.initializeLocalNotifications();
   }
 
   bool loading = false;
