@@ -6,9 +6,14 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class NotificationServices {
-  final FirebaseMessaging _message = FirebaseMessaging.instance;
-  final FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin =
+  FirebaseMessaging _message = FirebaseMessaging.instance;
+  FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
+
+  Future<String?> getdeviceToken() async {
+    String? token = await _message.getToken();
+    return token;
+  }
 
   void requestnotificaionservices() async {
     NotificationSettings settings = await _message.requestPermission(
@@ -52,11 +57,6 @@ class NotificationServices {
         }
       },
     );
-  }
-
-  Future<String?> getdeviceToken() async {
-    String? token = await _message.getToken();
-    return token;
   }
 
   void firebasenotification() async {

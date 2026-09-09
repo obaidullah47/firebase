@@ -1,5 +1,6 @@
 import 'package:firebase/firestore/firestore_homescreen.dart';
-import 'package:firebase/services/notification_services.dart';
+import 'package:firebase/service.dart';
+// import 'package:firebase/services/notification_services.dart';
 import 'package:firebase/view/continue_withgoogle_screen.dart';
 import 'package:firebase/view/home_screen.dart';
 import 'package:firebase/view/login_screen.dart';
@@ -15,7 +16,7 @@ void main() async {
   await Firebase.initializeApp();
 
   // Initialize notifications second
-  await NotificationServices().initializeLocalNotifications();
+  await Service().initializednotification();
 
   runApp(const FirebaseApp());
 }
