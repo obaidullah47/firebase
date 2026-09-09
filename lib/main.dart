@@ -7,11 +7,12 @@ import 'package:firebase/view/login_screen.dart';
 import 'package:firebase/view/signup_screen.dart';
 import 'package:firebase/view/splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
+  FirebaseMessaging.onBackgroundMessage(Firebasebackgroundmessaginghandler);
   // Initialize Firebase first
   await Firebase.initializeApp();
 
@@ -19,6 +20,14 @@ void main() async {
   await Service().initializednotification();
 
   runApp(const FirebaseApp());
+}
+
+//this pragma parameter is used to show the notificatio in background when the app is killed without this notification cannot be shown
+//this code from lineno 27 to 30 is mainly used for background notification
+@pragma('vm:entry-point')
+Future<void> Firebasebackgroundmessaginghandler(RemoteMessage message) async {
+  await Firebase.initializeApp();
+  print(message.notification!.title.toString());
 }
 
 class FirebaseApp extends StatelessWidget {

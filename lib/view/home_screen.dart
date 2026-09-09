@@ -1,3 +1,4 @@
+import 'package:firebase/service.dart';
 import 'package:firebase/utils/general_utils.dart';
 import 'package:firebase/view/Posts/post_screen.dart';
 import 'package:firebase/view/login_screen.dart';
@@ -15,6 +16,18 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  Service _service = Service();
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _service.ReqNotificationService();
+    _service.initializednotification();
+    _service.isIntereact(context);
+    _service.firebasenotificaiton();
+    _service.getDeviceToken();
+  }
+
   final ref = FirebaseDatabase.instance.ref('Posts');
   final searchcontroller = TextEditingController();
   final editcontroller = TextEditingController();

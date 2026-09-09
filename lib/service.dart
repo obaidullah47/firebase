@@ -1,7 +1,9 @@
 import 'dart:math';
 
+import 'package:firebase/Notification/message_screen.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class Service {
@@ -50,12 +52,18 @@ class Service {
     );
     await flutterLocalNotificationsPlugin.initialize(
       settings: initializationSettings,
-      onDidReceiveNotificationResponse: (response) {
-        if (kDebugMode) {
-          print('Notification Tapped${response.payload}');
-        }
-      },
+      onDidReceiveNotificationResponse: (payload) {},
     );
+  }
+
+  void isIntereact(BuildContext context) async {
+    RemoteMessage? initialmessage = await firebaseMessaging.getInitialMessage();
+    if (initialmessage != null) {
+      handlemessage(context, initialmessage);
+    }
+    FirebaseMessaging.onMessageOpenedApp.listen((event) {
+      handlemessage(context, event);
+    });
   }
 
   void firebasenotificaiton() async {
@@ -65,6 +73,9 @@ class Service {
         final body = message.notification!.body;
         print('Notification Title:${title}');
         print('Notification Body:${body}');
+        print("Notification Data:${message.data}");
+        print(message.data['type']);
+        print(message.data['id']);
       }
       ShowNotification(message);
     });
@@ -102,11 +113,21 @@ class Service {
       id: uniqueid,
       title: message.notification!.title ?? "New message",
       body: message.notification!.body ?? '',
+      payload: message.data.toString(),
       notificationDetails: notificationDetails,
     );
   }
 
   void refreshtoken() async {
     firebaseMessaging.onTokenRefresh.listen((NewToken) {});
+  }
+
+  void handlemessage(BuildContext context, RemoteMessage message) {
+    if (message.data['type'] == 'message') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (BuildContext context) => MessageScreen()),
+      );
+    }
   }
 }

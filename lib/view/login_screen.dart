@@ -1,6 +1,4 @@
-import 'dart:developer';
-
-import 'package:firebase/services/notification_services.dart';
+import 'package:firebase/service.dart';
 import 'package:firebase/utils/general_utils.dart';
 import 'package:firebase/view/forgot_password_screen.dart';
 import 'package:firebase/view/home_screen.dart';
@@ -22,17 +20,16 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   // final NotificationServices _notificationServices = NotificationServices();
-final Service _service = Service();
+  final Service _service = Service();
   @override
   void initState() {
     super.initState();
-
+    _service.ReqNotificationService();
+    _service.initializednotification();
+    _service.isIntereact(context);
+    _service.firebasenotificaiton();
+    _service.getDeviceToken();
   }
-
-  void _setupNotifications() {
-    _service.
-  }
-
 
   final TextEditingController _emailcontroller = TextEditingController();
   final TextEditingController _passwordcontroller = TextEditingController();
