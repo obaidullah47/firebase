@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
   static const String id = "homescreen";
+
   const HomeScreen({super.key});
 
   @override
@@ -17,14 +18,16 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   Service _service = Service();
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     _service.ReqNotificationService();
-    _service.initializednotification();
+    // Fixed: Added parentheses and context to initialize
+    _service.initializednotification(context);
     _service.isIntereact(context);
-    _service.firebasenotificaiton();
+    _service.firebasenotificaiton(context);
     _service.getDeviceToken();
   }
 
@@ -32,6 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final searchcontroller = TextEditingController();
   final editcontroller = TextEditingController();
   final _auth = FirebaseAuth.instance;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

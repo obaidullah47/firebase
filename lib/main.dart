@@ -1,6 +1,5 @@
 import 'package:firebase/firestore/firestore_homescreen.dart';
 import 'package:firebase/service.dart';
-// import 'package:firebase/services/notification_services.dart';
 import 'package:firebase/view/continue_withgoogle_screen.dart';
 import 'package:firebase/view/home_screen.dart';
 import 'package:firebase/view/login_screen.dart';
@@ -10,28 +9,55 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 
+// Create a global Service instance (initialized once)
+final service = Service();
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   FirebaseMessaging.onBackgroundMessage(Firebasebackgroundmessaginghandler);
-  // Initialize Firebase first
   await Firebase.initializeApp();
-
-  // Initialize notifications second
-  await Service().initializednotification();
 
   runApp(const FirebaseApp());
 }
 
-//this pragma parameter is used to show the notificatio in background when the app is killed without this notification cannot be shown
-//this code from lineno 27 to 30 is mainly used for background notification
 @pragma('vm:entry-point')
 Future<void> Firebasebackgroundmessaginghandler(RemoteMessage message) async {
   await Firebase.initializeApp();
-  print(message.notification!.title.toString());
+  print('Background message: ${message.notification!.title}');
 }
 
-class FirebaseApp extends StatelessWidget {
+class FirebaseApp extends StatefulWidget {
   const FirebaseApp({super.key});
+
+  @override
+  State<FirebaseApp> createState() => _FirebaseAppState();
+}
+
+class _FirebaseAppState extends State<FirebaseApp> {
+  @override
+  void initState() {
+    super.initState();
+    _setupNotifications();
+  }
+
+  Future<void> _setupNotifications() async {
+    // Initialize local notifications first (no context needed)
+    await service.initializednotification(context);
+
+    // Then request permission
+    service.ReqNotificationService();
+
+    // Get device token
+    String? token = await service.getDeviceToken();
+    print('FCM Token: $token');
+
+    // Setup message listeners (pass context here where it's available)
+    service.isIntereact(context);
+    service.firebasenotificaiton(context);
+
+    // Listen for token refresh
+    service.refreshtoken();
+  }
 
   @override
   Widget build(BuildContext context) {

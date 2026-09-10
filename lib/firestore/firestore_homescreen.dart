@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase/service.dart';
 import 'package:firebase/utils/general_utils.dart';
 import 'package:firebase/view/login_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -17,16 +16,16 @@ class FirestoreHomescreen extends StatefulWidget {
 }
 
 class _FirestoreHomescreenState extends State<FirestoreHomescreen> {
-  // NotificationServices notificationServices = NotificationServices();
-  Service _service = Service();
-  @override
-  void initState() {
-    super.initState();
-    _service.getDeviceToken();
-    _service.ReqNotificationService();
-    _service.initializednotification();
-    _service.firebasenotificaiton();
-  }
+  // // NotificationServices notificationServices = NotificationServices();
+  // Service _service = Service();
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   _service.getDeviceToken();
+  //   _service.ReqNotificationService();
+  //   _service.initializednotification();
+  //   _service.firebasenotificaiton();
+  // }
 
   bool loading = false;
   final firestore = FirebaseFirestore.instance.collection('posts').snapshots();

@@ -12,6 +12,7 @@ import 'continue_withgoogle_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   static const String id = 'loginScreen';
+
   const LoginScreen({super.key});
 
   @override
@@ -21,14 +22,17 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   // final NotificationServices _notificationServices = NotificationServices();
   final Service _service = Service();
+
   @override
   void initState() {
     super.initState();
     _service.ReqNotificationService();
-    _service.initializednotification();
+    _service.initializednotification;
     _service.isIntereact(context);
-    _service.firebasenotificaiton();
-    _service.getDeviceToken();
+    _service.firebasenotificaiton(context);
+    _service.getDeviceToken().then((value) {
+      print("Device Token:${value}");
+    });
   }
 
   final TextEditingController _emailcontroller = TextEditingController();

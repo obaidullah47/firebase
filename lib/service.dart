@@ -1,6 +1,8 @@
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:firebase/Notification/message_screen.dart';
+import 'package:firebase/utils/general_utils.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -29,30 +31,38 @@ class Service {
         );
     if (notificationSettings.authorizationStatus ==
         AuthorizationStatus.authorized) {
-      print("Permession accepted");
+      GeneralUtils.fluttertoast("Permission Accepted");
     }
     if (notificationSettings.authorizationStatus ==
         AuthorizationStatus.provisional) {
-      print('User granted provisional permisson ');
+      if (kDebugMode) {
+        print('User granted provisional permisson ');
+      }
     }
     if (notificationSettings.authorizationStatus ==
         AuthorizationStatus.denied) {
-      print('User Denied  permission');
+      if (kDebugMode) {
+        print('User Denied  permission');
+      }
     }
   }
 
-  Future<void> initializednotification() async {
+  // Changed to initialize once without requiring a message
+  Future<void> initializednotification(BuildContext context) async {
     AndroidInitializationSettings androidInitializationSettings =
-        AndroidInitializationSettings('@mipmap/ic_launcher');
+        const AndroidInitializationSettings('@mipmap/ic_launcher');
     DarwinInitializationSettings darwinInitializationSettings =
-        DarwinInitializationSettings();
+        const DarwinInitializationSettings();
     InitializationSettings initializationSettings = InitializationSettings(
       android: androidInitializationSettings,
       iOS: darwinInitializationSettings,
     );
     await flutterLocalNotificationsPlugin.initialize(
       settings: initializationSettings,
-      onDidReceiveNotificationResponse: (payload) {},
+      onDidReceiveNotificationResponse: (payload) {
+        // Handle click on local notification
+        isIntereact(context);
+      },
     );
   }
 
@@ -66,17 +76,18 @@ class Service {
     });
   }
 
-  void firebasenotificaiton() async {
+  void firebasenotificaiton(BuildContext context) async {
     FirebaseMessaging.onMessage.listen((message) {
       if (kDebugMode) {
         final title = message.notification!.title;
         final body = message.notification!.body;
         print('Notification Title:${title}');
         print('Notification Body:${body}');
-        print("Notification Data:${message.data}");
+        print(message.data.toString());
         print(message.data['type']);
         print(message.data['id']);
       }
+      // Fixed: Removed re-initialization here
       ShowNotification(message);
     });
   }
@@ -113,7 +124,8 @@ class Service {
       id: uniqueid,
       title: message.notification!.title ?? "New message",
       body: message.notification!.body ?? '',
-      payload: message.data.toString(),
+      // Changed: Encode data as JSON for the payload
+      payload: jsonEncode(message.data),
       notificationDetails: notificationDetails,
     );
   }
@@ -123,10 +135,17 @@ class Service {
   }
 
   void handlemessage(BuildContext context, RemoteMessage message) {
+    _navigate(context, message);
+  }
+
+  // Added helper method for navigation
+  void _navigate(BuildContext context, RemoteMessage message) {
     if (message.data['type'] == 'message') {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (BuildContext context) => MessageScreen()),
+        MaterialPageRoute(
+          builder: (BuildContext context) => const MessageScreen(),
+        ),
       );
     }
   }
