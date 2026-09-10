@@ -108,6 +108,7 @@ class Service {
           ticker: 'ticker',
           importance: Importance.high,
           priority: Priority.high,
+          fullScreenIntent: true,
         );
     DarwinNotificationDetails darwinNotificationDetails =
         DarwinNotificationDetails(
@@ -131,7 +132,9 @@ class Service {
   }
 
   void refreshtoken() async {
-    firebaseMessaging.onTokenRefresh.listen((NewToken) {});
+    firebaseMessaging.onTokenRefresh.listen((NewToken) {
+      print("New Token ${NewToken}");
+    });
   }
 
   void handlemessage(BuildContext context, RemoteMessage message) {

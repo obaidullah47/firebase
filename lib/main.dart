@@ -16,6 +16,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   FirebaseMessaging.onBackgroundMessage(Firebasebackgroundmessaginghandler);
   await Firebase.initializeApp();
+  service.ShowNotification(RemoteMessage());
 
   runApp(const FirebaseApp());
 }
@@ -37,10 +38,10 @@ class _FirebaseAppState extends State<FirebaseApp> {
   @override
   void initState() {
     super.initState();
-    _setupNotifications();
+    _setupNotifications(RemoteMessage());
   }
 
-  Future<void> _setupNotifications() async {
+  Future<void> _setupNotifications(RemoteMessage message) async {
     // Initialize local notifications first (no context needed)
     await service.initializednotification(context);
 
@@ -54,7 +55,7 @@ class _FirebaseAppState extends State<FirebaseApp> {
     // Setup message listeners (pass context here where it's available)
     service.isIntereact(context);
     service.firebasenotificaiton(context);
-
+    await service.ShowNotification(message);
     // Listen for token refresh
     service.refreshtoken();
   }
