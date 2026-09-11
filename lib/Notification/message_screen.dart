@@ -15,11 +15,18 @@ class _MessageScreenState extends State<MessageScreen> {
     return Scaffold(
       appBar: AppBar(title: Text('MessageScreen'), centerTitle: true),
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          TextFormField(
-            decoration: InputDecoration(
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(50),
+          Padding(
+            padding: EdgeInsetsGeometry.symmetric(horizontal: 40),
+            child: TextFormField(
+              maxLines: 5,
+              decoration: InputDecoration(
+                hintText: "Write Your Message here",
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(30),
+                ),
               ),
             ),
           ),

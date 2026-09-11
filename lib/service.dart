@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:firebase/Notification/message_screen.dart';
+import 'package:firebase/Notification/post_screen.dart';
 import 'package:firebase/utils/general_utils.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
@@ -60,6 +61,11 @@ class Service {
     await flutterLocalNotificationsPlugin.initialize(
       settings: initializationSettings,
       onDidReceiveNotificationResponse: (payload) {
+        if (payload != null) {
+          Map<String, dynamic> data = jsonDecode(payload.payload.toString());
+          RemoteMessage message = RemoteMessage(data: data);
+          handlemessage(context, message);
+        }
         // Handle click on local notification
         isIntereact(context);
       },
@@ -87,7 +93,6 @@ class Service {
         print(message.data['type']);
         print(message.data['id']);
       }
-      // Fixed: Removed re-initialization here
       ShowNotification(message);
     });
   }
@@ -95,9 +100,10 @@ class Service {
   Future<void> ShowNotification(RemoteMessage message) async {
     AndroidNotificationChannel androidNotificationChannel =
         AndroidNotificationChannel(
-          'high importance channel',
+          'high_importance_channel',
           'high importance Notifications',
           importance: Importance.max,
+          playSound: true,
         );
 
     AndroidNotificationDetails androidNotificationDetails =
@@ -125,7 +131,6 @@ class Service {
       id: uniqueid,
       title: message.notification!.title ?? "New message",
       body: message.notification!.body ?? '',
-      // Changed: Encode data as JSON for the payload
       payload: jsonEncode(message.data),
       notificationDetails: notificationDetails,
     );
@@ -149,6 +154,12 @@ class Service {
         MaterialPageRoute(
           builder: (BuildContext context) => const MessageScreen(),
         ),
+      );
+    }
+    if (message.data['media'] == 'post') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (BuildContext context) => PostScreen()),
       );
     }
   }

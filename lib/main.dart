@@ -17,6 +17,7 @@ void main() async {
   FirebaseMessaging.onBackgroundMessage(Firebasebackgroundmessaginghandler);
   await Firebase.initializeApp();
   service.ShowNotification(RemoteMessage());
+  service.ReqNotificationService();
 
   runApp(const FirebaseApp());
 }

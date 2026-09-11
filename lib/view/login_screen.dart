@@ -26,7 +26,6 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   void initState() {
     super.initState();
-    _service.ReqNotificationService();
     _service.initializednotification;
     _service.isIntereact(context);
     _service.firebasenotificaiton(context);

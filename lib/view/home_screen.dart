@@ -23,7 +23,6 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    _service.ReqNotificationService();
     // Fixed: Added parentheses and context to initialize
     _service.initializednotification(context);
     _service.isIntereact(context);
